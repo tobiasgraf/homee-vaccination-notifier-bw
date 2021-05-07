@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
-
+import notifier from "node-notifier";
 dotenv.config();
 
 const homeeId = process.env.HOMEE_ID;
@@ -36,6 +36,14 @@ while (true) {
 
   if (!error) {
     console.log("Appointments available – sending to homee!");
+
+    notifier.notify(
+      {
+        title: 'Termin gefunden',
+        message: 'Es wurde ein freier Termin gefunden !',
+        sound: true, // Only Notification Center or Windows Toasters
+        wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
+      });
 
     const response = await fetch(sucessWebhook);
     if (response.ok) {
